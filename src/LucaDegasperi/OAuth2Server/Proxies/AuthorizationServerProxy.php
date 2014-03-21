@@ -41,7 +41,7 @@ class AuthorizationServerProxy
 
     /**
      * Create a new AuthorizationServerProxy
-     * 
+     *
      * @param Authorization $authServer the OAuth Authorization Server to use
      */
     public function __construct(Authorization $authServer)
@@ -51,7 +51,7 @@ class AuthorizationServerProxy
 
     /**
      * Pass the method call to the underlying Authorization Server
-     * 
+     *
      * @param  string $method the method being called
      * @param  array|null $args the arguments of the method being called
      * @return mixed the underlying method retuned value
@@ -88,7 +88,7 @@ class AuthorizationServerProxy
 
     /**
      * Make a redirect with an authorization code
-     * 
+     *
      * @param  string $code   the authorization code of the redirection
      * @param  array  $params the redirection parameters
      * @return Redirect       a Redirect object
@@ -103,7 +103,7 @@ class AuthorizationServerProxy
 
     /**
      * Make a redirect with an error
-     * 
+     *
      * @param  array  $params the redirection parameters
      * @return Redirect       a Redirect object
      */
@@ -118,7 +118,7 @@ class AuthorizationServerProxy
 
     /**
      * Check the authorization code request parameters
-     * 
+     *
      * @throws \OAuth2\Exception\ClientException
      * @return array Authorize request parameters
      */
@@ -142,7 +142,7 @@ class AuthorizationServerProxy
 
     /**
      * Perform the access token flow
-     * 
+     *
      * @return Response the appropriate response object
      */
     public function performAccessTokenFlow()
@@ -166,7 +166,7 @@ class AuthorizationServerProxy
             // make this better in order to return the correct headers via the response object
             $error = $this->authServer->getExceptionType($e->getCode());
             $headers = $this->authServer->getExceptionHttpHeaders($error);
-            return Response::json($response, self::$exceptionHttpStatusCodes[$error], $headers);
+            return $response;
 
         } catch (Exception $e) {
 
@@ -176,9 +176,9 @@ class AuthorizationServerProxy
                 'error_description' => $e->getMessage()
             );
 
-            return Response::json($response, 500);
+            return $response;
         }
 
-        return Response::json($response);
+        return $response;
     }
 }
