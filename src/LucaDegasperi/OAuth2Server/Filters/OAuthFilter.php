@@ -20,13 +20,14 @@ class OAuthFilter
         try {
             ResourceServer::isValid(Config::get('lucadegasperi/oauth2-server-laravel::oauth2.http_headers_only'));
         } catch (\League\OAuth2\Server\Exception\InvalidAccessTokenException $e) {
+          
             return Response::json(array(
-                'status' => 403,
-                'error' => 'forbidden',
+                'status' => 9001,
+                'error' => 'forbidden'.$e->getCode(),
                 'error_message' => $e->getMessage(),
             ), 403);
         }
-        
+
         if (func_num_args() > 2) {
             $args = func_get_args();
             $scopes = array_slice($args, 2);
@@ -34,7 +35,7 @@ class OAuthFilter
             foreach ($scopes as $s) {
                 if (! ResourceServer::hasScope($s)) {
                     return Response::json(array(
-                        'status' => 403,
+                        'status' => 9002,
                         'error' => 'forbidden',
                         'error_message' => 'Only access token with scope '.$s.' can use this endpoint',
                     ), 403);
