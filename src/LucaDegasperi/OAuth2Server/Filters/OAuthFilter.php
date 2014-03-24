@@ -20,12 +20,31 @@ class OAuthFilter
         try {
             ResourceServer::isValid(Config::get('lucadegasperi/oauth2-server-laravel::oauth2.http_headers_only'));
         } catch (\League\OAuth2\Server\Exception\InvalidAccessTokenException $e) {
-          
-            return Response::json(array(
-                'status' => 9001,
-                'error' => 'forbidden'.$e->getCode(),
-                'error_message' => $e->getMessage(),
-            ), 403);
+
+            switch ($e->getMessage()) {
+              case 'Access token is missing':
+                return Response::json(array(
+                    'status' => 9001,
+                    'error' => 'missing access token',
+                    'error_message' => $e->getMessage(),
+                ), 403);
+                break;
+              case 'Access token is not valid':
+                return Response::json(array(
+                    'status' => 9002,
+                    'error' => 'invalid access token',
+                    'error_message' => $e->getMessage(),
+                ), 403);
+                break;
+              default:
+                return Response::json(array(
+                    'status' => 9000,
+                    'error' => 'access token required',
+                    'error_message' => $e->getMessage(),
+                ), 403);
+                break;
+            }
+
         }
 
         if (func_num_args() > 2) {
