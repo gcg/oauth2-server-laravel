@@ -23,25 +23,14 @@ class OAuthFilter
 
             switch ($e->getMessage()) {
               case 'Access token is missing':
-                return Response::json(array(
-                    'status' => 9001,
-                    'error' => 'missing access token',
-                    'error_message' => $e->getMessage(),
-                ), 403);
+                return Response::api01(9001, $e->getMessage(), array(), 403);
                 break;
               case 'Access token is not valid':
-                return Response::json(array(
-                    'status' => 9002,
-                    'error' => 'invalid access token',
-                    'error_message' => $e->getMessage(),
-                ), 403);
+                return Response::api01(9002, $e->getMessage(), array(), 403);
+
                 break;
               default:
-                return Response::json(array(
-                    'status' => 9000,
-                    'error' => 'access token required',
-                    'error_message' => $e->getMessage(),
-                ), 403);
+                return Response::api01(9000, $e->getMessage(), array(), 403);
                 break;
             }
 
